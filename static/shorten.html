@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The URL Shortener</title>
+        <link rel="stylesheet" href="/static/pure.min.css" />
+    </head>
+    <body>
+        <div class="pure-u-2-24"></div>
+        <div class="pure-u-20-24">
+            <h1>URL Shortener</h1>
+            <form id="form-shorten-url" class="pure-form pure-form-stacked">
+                <h2>Add A URL</h2>
+                <fieldset>
+                    <input class="pure-input-1" type="text" name="short" placeholder="Short URL (optional)" />
+                    <input class="pure-input-1" type="url" name="long" placeholder="Original URL" required />
+                    <label for="overwrite" class="pure-checkbox">
+                        <input class="form-control" type="checkbox" name="overwrite" /> Overwrite old URL?
+                    </label>
+                <input class="pure-button pure-button-primary pure-input-1" type="submit" value="Shorten It!" />
+                </fieldset>
+            </form>
+            <div>
+                <h2>Current URLs</h2>
+                <table id="current-urls" class="pure-table pure-table-horizontal" style="width: 100%">
+                    <col width="20%" />
+                    <col width="70%" />
+                    <col width="10%" />
+                    <thead>
+                        <tr>
+                            <th>Short Link</th>
+                            <th>Original URL</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="current-urls-data">
+                        <tr>
+                            <td colspan="3">Hold on...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="pure-u-2-24"></div>
+        <script type="text/javascript" src="/static/app.js"></script>
+    </body>
+</html>

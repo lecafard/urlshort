@@ -18,8 +18,8 @@ import (
 )
 
 var URL_BUCKET = []byte("urls")
-// Alphabetical list (please sort later)
-var BLACKLIST = []string{"api", "delete", "info", "list", "robots.txt", "shorten", "static"}
+// Alphabetical list (sort later)
+var BLACKLIST = []string{"api", "delete", "info", "list", "robots.txt", "shorten", "static", "stats"}
 var ALPHANUM = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 const RAND_LENGTH = 6
 
@@ -37,6 +37,10 @@ func RandomString(n int, runes []rune) string {
 func NotFound(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(404)
     fmt.Fprint(w, "URL Not Found\n")
+}
+
+func ShortenerUI(w http.ResponseWriter, r *http.Request) {
+    http.ServeFile(w, r, "static/shorten.html")
 }
 
 func Robots(w http.ResponseWriter, r *http.Request) {
@@ -93,8 +97,10 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
     err = json.Unmarshal(body, &u)
     // Check if no other short urls exist
     if err != nil {
-        log.Println("[ERROR]", err)
-        ServerError(w, r)
+        // Malformed Request
+        w.WriteHeader(400);
+        w.Header().Set("Content-Type", "application/json");
+        w.Write([]byte("{\"status\":false,\"error\":\"MalformedRequest\"}"));
         return
     }
     checked := u.Overwrite || false
@@ -238,9 +244,14 @@ func main() {
     mux.Get("/api/list", http.HandlerFunc(List))
     mux.Post("/api/shorten", http.HandlerFunc(Shorten))
     mux.Del("/api/delete/:short", http.HandlerFunc(Delete))
+    mux.Get("/static/*", http.FileServer(http.Dir("./static")))
     mux.Get("/", http.HandlerFunc(NotFound))
     mux.Get("/robots.txt", http.HandlerFunc(Robots))
+    mux.Get("/shorten", http.HandlerFunc(ShortenerUI))
     mux.Get("/:short", http.HandlerFunc(Lengthen))
-
-    log.Fatal(http.ListenAndServe(":" + strconv.Itoa(*port), mux))
+    
+    fs := http.FileServer(http.Dir("./static"))
+    http.Handle("/static/", http.StripPrefix("/static", fs))
+    http.Handle("/", mux)
+    log.Fatal(http.ListenAndServe(":" + strconv.Itoa(*port), nil))
 }
