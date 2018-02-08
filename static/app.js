@@ -21,22 +21,30 @@
         var long = document.createElement('td');
         var actions = document.createElement('td');
         var shortA = document.createElement('a');
-        shortA.text = record.short;
+        shortA.className = 'link';
         shortA.href = '/' + record.short;
+        shortA.text = record.short;
         short.appendChild(shortA);
-        long.appendChild(document.createTextNode(record.long));
+        var longA = document.createElement('a');
+        longA.className = 'link';
+        longA.text = record.long;
+        longA.href = record.long;
+        long.appendChild(longA);
         
         // Work on action buttons
-        var copyButton = document.createElement('button'); 
-        copyButton.className = 'pure-button button-success'; 
-        copyButton.innerHTML = 'c'; 
+        /*var copyButton = document.createElement('button'); 
+        copyButton.className = 'pure-button button-copy'; 
+        copyButton.innerHTML = 'cp';
+        copyButton.addEventListener('click', function() {
+            copyRecord(row);
+        });*/
         var deleteButton = document.createElement('button'); 
-        deleteButton.className = 'pure-button button-warning'; 
-        deleteButton.innerHTML = 'd';
+        deleteButton.className = 'pure-button button-delete'; 
+        deleteButton.innerHTML = 'Delete';
         deleteButton.addEventListener('click', function() {
             deleteRecord(row);
         });
-        actions.appendChild(copyButton);
+        // actions.appendChild(copyButton);
         actions.appendChild(deleteButton);
 
         row.appendChild(short);
@@ -59,6 +67,12 @@
             alert("An unknown error occurred, check the console for more details");
             console.error(e);
         });
+    }
+
+    function copyRecord(ref) {
+        var link = ref.children[0];
+        link.select();
+        document.execCommand('copy');
     }
 
     // Request using fetch
@@ -85,8 +99,7 @@
         e.preventDefault();
         var data = {
             short: fInputShort.value,
-            long: fInputLong.value,
-            overwrite: fInputOverwrite.checked
+            long: fInputLong.value
         };
         fetch('/api/shorten', {
             credentials: 'include',
@@ -104,6 +117,9 @@
                     long: data.long
                 });
                 dataTable.children[0].style.display = 'none';
+                // Clear inputs
+                fInputShort.value = '';
+                fInputLong.value = '';
             }
         }).catch(function(err) {
             alert("An unknown error occurred, check the console for more details");

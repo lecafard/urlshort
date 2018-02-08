@@ -110,7 +110,7 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
         log.Println("[ERROR]", err)
         w.WriteHeader(400)
         w.Header().Set("Content-Type", "application/json")
-        w.Write([]byte("{\"success\":false,\"error\":\"InvalidURL\"}"))
+        w.Write([]byte("{\"status\":false,\"error\":\"InvalidURL\"}"))
         return
     }
 
@@ -123,7 +123,7 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
             BLACKLIST[idx] == ul || idx == len(BLACKLIST) {
             w.WriteHeader(400)
             w.Header().Set("Content-Type", "application/json")
-            w.Write([]byte("{\"success\":false,\"error\":\"InvalidShortURL\"}"))
+            w.Write([]byte("{\"status\":false,\"error\":\"InvalidShortURL\"}"))
             return
         }
     } else {
@@ -135,7 +135,7 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
         if db.Get(u.Short) != "" {
             w.WriteHeader(400)
             w.Header().Set("Content-Type", "application/json")
-            w.Write([]byte("{\"success\":false,\"error\":\"ExistsShortURL\"}"))
+            w.Write([]byte("{\"status\":false,\"error\":\"ExistsShortURL\"}"))
             return
         }
     }
@@ -147,7 +147,7 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
     }
 
     w.Header().Set("Content-Type", "application/json")
-    w.Write([]byte("{\"success\":true,\"short\":\""+ u.Short +"\"}"))
+    w.Write([]byte("{\"status\":true,\"short\":\""+ u.Short +"\"}"))
 }
 
 func ServerError(w http.ResponseWriter, r *http.Request) {

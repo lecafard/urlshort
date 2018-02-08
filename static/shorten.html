@@ -3,6 +3,23 @@
     <head>
         <title>The URL Shortener</title>
         <link rel="stylesheet" href="/static/pure.min.css" />
+        <style>
+            .button-delete {
+                background-color: rgb(202, 60, 60);
+                color: white;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .button-copy {
+                background-color: rgb(66, 184, 221);
+                color: white; 
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .link {
+                color: #59BBD9;
+            }
+        </style>
     </head>
     <body>
         <div class="pure-u-2-24"></div>
@@ -13,9 +30,6 @@
                 <fieldset>
                     <input class="pure-input-1" type="text" name="short" placeholder="Short URL (optional)" />
                     <input class="pure-input-1" type="url" name="long" placeholder="Original URL" required />
-                    <label for="overwrite" class="pure-checkbox">
-                        <input class="form-control" type="checkbox" name="overwrite" /> Overwrite old URL?
-                    </label>
                 <input class="pure-button pure-button-primary pure-input-1" type="submit" value="Shorten It!" />
                 </fieldset>
             </form>
