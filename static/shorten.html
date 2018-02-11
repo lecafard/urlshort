@@ -16,8 +16,26 @@
                 padding-left: 10px;
                 padding-right: 10px;
             }
+            .dialog-error {
+                color: #D8000C;
+                background-color: #FFD2D2;
+            }
+            .dialog-success { 
+                color: #4F8A10;
+                background-color: #DFF2BF;
+            }
+            .dialog {
+                font-size: 1em;
+                margin:10px 22px;
+                padding: 10px;
+                border-radius: 2px;
+                vertical-align: middle;
+            }
             .link {
                 color: #59BBD9;
+            }
+            .hidden {
+                display: none;
             }
         </style>
     </head>
@@ -25,12 +43,16 @@
         <div class="pure-u-2-24"></div>
         <div class="pure-u-20-24">
             <h1>URL Shortener</h1>
+            <aside class="dialog dialog-success" id="dialog" style="display: none;">Short URL successfully created.</aside>
             <form id="form-shorten-url" class="pure-form pure-form-stacked">
                 <h2>Add A URL</h2>
                 <fieldset>
                     <input class="pure-input-1" type="text" name="short" placeholder="Short URL (optional)" />
                     <input class="pure-input-1" type="url" name="long" placeholder="Original URL" required />
-                <input class="pure-button pure-button-primary pure-input-1" type="submit" value="Shorten It!" />
+                    <label for="overwrite" class="pure-checkbox">
+                        <input class="form-control" type="checkbox" name="overwrite" /> Overwrite old URL?
+                    </label>
+                    <input class="pure-button pure-button-primary pure-input-1" type="submit" value="Shorten It!" />
                 </fieldset>
             </form>
             <div>
