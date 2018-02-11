@@ -12,6 +12,7 @@ import (
     "io/ioutil"
     "net/url"
     "math/rand"
+    "time"
 
     "github.com/bmizerany/pat"
     "github.com/boltdb/bolt"
@@ -233,6 +234,9 @@ func main() {
     dbpath := flag.String("data", "data.db", "Location of database.")
     port := flag.Int("port", 8000, "Port to listen on.")
     flag.Parse()
+
+    // Generate random(ish) seed
+    rand.Seed(time.Now().UTC().UnixNano())
 
     // Initialise database
     err := db.Open(*dbpath)
