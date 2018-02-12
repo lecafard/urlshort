@@ -5,6 +5,11 @@ An easy to use URL shortener written in Go and Javascript for when you just need
 private URL shortener.
 
 ## Build and Run
+### 0. Install Go
+This code is going to be quite useless without the Go compiler. Download the installer from the 
+![official website](https://golang.org/dl). Alternatively, you can use your favourite package
+manager to install Go.
+
 ### 1. Download Packages
 ~~~
 go get github.com/bmizerany/pat
