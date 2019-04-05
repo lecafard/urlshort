@@ -5,7 +5,6 @@ import (
     "flag"
     "net/http"
     "log"
-    "strconv"
     "encoding/json"
     "strings"
     "sort"
@@ -121,7 +120,7 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
 
         // Check if short url is valid
         if strings.ContainsAny(u.Short, "~`!@#$%^&*()+={}[]|\\:;\"'<,>.?/") ||
-            BLACKLIST[idx] == ul || idx == len(BLACKLIST) {
+            (idx < len(BLACKLIST) && BLACKLIST[idx] == ul) {
             w.WriteHeader(400)
             w.Header().Set("Content-Type", "application/json")
             w.Write([]byte("{\"status\":false,\"error\":\"InvalidShortURL\"}"))
@@ -232,7 +231,7 @@ var db URLStore
 func main() {
     // Set flags and whatever
     dbpath := flag.String("data", "data.db", "Location of database.")
-    port := flag.Int("port", 8000, "Port to listen on.")
+    host := flag.String("host", ":8000", "Port to listen on.")
     flag.Parse()
 
     // Generate random(ish) seed
@@ -257,5 +256,5 @@ func main() {
     fs := http.FileServer(http.Dir("./static"))
     http.Handle("/static/", http.StripPrefix("/static", fs))
     http.Handle("/", mux)
-    log.Fatal(http.ListenAndServe(":" + strconv.Itoa(*port), nil))
+    log.Fatal(http.ListenAndServe(*host, nil))
 }
