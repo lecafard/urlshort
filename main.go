@@ -2,7 +2,6 @@ package main
 
 import (
     "fmt"
-    "flag"
     "net/http"
     "log"
     "encoding/json"
@@ -15,6 +14,7 @@ import (
 
     "github.com/bmizerany/pat"
     "github.com/boltdb/bolt"
+    "github.com/spf13/viper"
 )
 
 var URL_BUCKET = []byte("urls")
@@ -229,16 +229,22 @@ var db URLStore
 
 
 func main() {
-    // Set flags and whatever
-    dbpath := flag.String("data", "data.db", "Location of database.")
-    host := flag.String("host", ":8000", "Port to listen on.")
-    flag.Parse()
+    viper.SetDefault("data", "data.db")
+    viper.SetDefault("listen", ":8000")
+
+    viper.SetEnvPrefix("urlshort")
+    viper.BindEnv("data")
+    viper.BindEnv("listen")
+
+
+    dbpath := viper.GetString("data")
+    host := viper.GetString("listen")
 
     // Generate random(ish) seed
     rand.Seed(time.Now().UTC().UnixNano())
 
     // Initialise database
-    err := db.Open(*dbpath)
+    err := db.Open(dbpath)
     if err != nil {
         panic(err)
     }
@@ -252,9 +258,9 @@ func main() {
     mux.Get("/robots.txt", http.HandlerFunc(Robots))
     mux.Get("/shorten", http.HandlerFunc(ShortenerUI))
     mux.Get("/:short", http.HandlerFunc(Lengthen))
-    
+
     fs := http.FileServer(http.Dir("./static"))
     http.Handle("/static/", http.StripPrefix("/static", fs))
     http.Handle("/", mux)
-    log.Fatal(http.ListenAndServe(*host, nil))
+    log.Fatal(http.ListenAndServe(host, nil))
 }
